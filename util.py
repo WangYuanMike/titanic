@@ -8,12 +8,10 @@ pd.set_option('display.width', desired_width)
 pd.set_option('display.max_columns', 20)
 
 
-# Train
 # 0            1       2*    3    4    5      6      7*      8     9*     10
 # PassengerId, Pclass, Name, Sex, Age, SibSp, Parch, Ticket, Fare, Cabin, Embarked
 # 2, 1, "Cumings, Mrs. John Bradley (Florence Briggs Thayer)", female, 38, 1, 0, PC17599, 71.2833, C85, C3
 
-# Test
 # PassengerId,Survived,Pclass,Name,Sex,Age,SibSp,Parch,Ticket,Fare,Cabin,Embarked
 
 
@@ -68,6 +66,12 @@ def total_transform(x, need_x0=False):
     if need_x0:
         x = add_x0(x)
     return x
+
+
+def generate_gender_submission(test_x_raw, predict_y):
+    df = test_x_raw[["PassengerId"]]
+    df = df.assign(Survived=pd.Series(predict_y).values)
+    return df
 
 
 class TestUtil(unittest.TestCase):
