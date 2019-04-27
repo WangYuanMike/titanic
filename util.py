@@ -1,6 +1,7 @@
-import numpy as np
 import pandas as pd
 import unittest
+import subprocess
+import shlex
 
 
 desired_width=320
@@ -68,10 +69,17 @@ def total_transform(x, need_x0=False):
     return x
 
 
-def generate_gender_submission(test_x_raw, predict_y):
+def generate_submission(test_x_raw, predict_y):
     df = test_x_raw[["PassengerId"]]
     df = df.assign(Survived=pd.Series(predict_y).values)
     return df
+
+
+def submit_test_result(submission_file, message):
+    command = "kaggle competitions submit -c titanic -f " + submission_file + " -m \"" + message + "\""
+    res = subprocess.check_output(shlex.split(command))
+    for line in res.splitlines():
+        print(line)
 
 
 class TestUtil(unittest.TestCase):
@@ -123,6 +131,10 @@ class TestUtil(unittest.TestCase):
         #print('\n', train_x[:6])
         train_x = total_transform(train_x)
         #print('\n', train_x[:5])
+
+    def test_submit_test_result(self):
+        if False:
+            submit_test_result("lr_prediction.csv", "test kaggle API in python")
 
 
 if __name__ == '__main__':
