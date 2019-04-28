@@ -28,11 +28,6 @@ def load_test_samples(sample_file="./test.csv"):
     return x
 
 
-def add_x0(x):
-    x['x0'] = 1
-    return x
-
-
 def remove_fields(x):
     x = x.drop(['PassengerId', 'Name', 'Ticket', 'Cabin'], axis=1)
     return x
@@ -59,13 +54,11 @@ def impute(x):
     return x
 
 
-def total_transform(x, need_x0=False):
+def total_transform(x):
     x = remove_fields(x)
     x = transform_sex(x)
     x = transform_embarked(x)
     x = impute(x)
-    if need_x0:
-        x = add_x0(x)
     return x
 
 
@@ -96,12 +89,6 @@ class TestUtil(unittest.TestCase):
         train_x, _ = load_train_samples()
         train_x = remove_fields(train_x)
         self.assertEqual(train_x.shape, (891, 7))
-
-    def test_add_x0(self):
-        train_x, _ = load_train_samples()
-        train_x = add_x0(train_x)
-        self.assertEqual(train_x.shape, (891, 12))
-        self.assertEqual(train_x.loc[0, 'x0'], 1)
 
     def test_transform_sex(self):
         train_x, _ = load_train_samples()

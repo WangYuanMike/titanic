@@ -4,7 +4,7 @@ from util import load_train_samples, load_test_samples, total_transform, generat
 
 
 def grid_search(verbose=True):
-    best_c = 1
+    best_C = 1
     best_score_mean = 0.0
     best_score_std = 1.0
     c_list = list(range(-5, 6))
@@ -19,8 +19,11 @@ def grid_search(verbose=True):
         if scores.mean() > best_score_mean or (scores.mean() == best_score_mean and scores.std() < best_score_std):
             best_score_mean = scores.mean()
             best_score_std = scores.std()
-            best_c = c
-    return pow(10, best_c)
+            best_C = C
+    if verbose:
+        print("best_C = %.2e" % best_C)
+        print("best_cv_score = %.4f" % best_score_mean)
+    return best_C, best_score_mean
 
 
 def generate_test_result(C=1, verbose=True):
@@ -40,15 +43,16 @@ def generate_test_result(C=1, verbose=True):
         print()
         print("C = %.2e" % C)
         print(submission_df)
-    print("submission file lr_prediction.csv is generated.")
+    print("submission file " + submission_file + " is generated.")
     return submission_file
 
 
-def main(auto_submit=False):
-    submission_file = generate_test_result(grid_search())
-    if auto_submit:
-        submit_test_result(submission_file, "logistic regression - submitted within python")
+def main(auto_submit_score=0.8):
+    best_C, best_cv_score = grid_search()
+    submission_file = generate_test_result(best_C, verbose=False)
+    if best_cv_score >= auto_submit_score:
+        submit_test_result(submission_file, "logistic regression - submit within python")
 
 
 if __name__ == '__main__':
-    main(auto_submit=True)
+    main()
