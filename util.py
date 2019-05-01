@@ -75,6 +75,15 @@ def submit_test_result(submission_file, message):
         print(line)
 
 
+def frange(start, stop, step):
+    i_list = []
+    i = start
+    while i < stop:
+        i_list.append(i)
+        i += step
+    return i_list
+
+
 class TestUtil(unittest.TestCase):
     def test_load_train_data(self):
         train_x, train_y = load_train_samples()
