@@ -18,8 +18,8 @@ def grid_search(verbose=True):
     best_gamma = 1
     best_score_mean = 0.0
     best_score_std = 1.0
-    c_list = frange(-3, 16, 0.5)          # frange(-5, 16, 1)
-    gamma_list = frange(-8, 3, 0.5)      # frange(-15, 4, 1)
+    c_list = frange(-5, 16, 1)
+    gamma_list = frange(-15, 4, 1)
     Z = np.zeros((len(gamma_list), len(c_list)))
     for i, c in enumerate(c_list):
         for j, g in enumerate(gamma_list):
@@ -40,13 +40,12 @@ def grid_search(verbose=True):
         print("best_C = %.2e" % best_C)
         print("best_gamma = %.2e" % best_gamma)
         print("best_cv_score = %.4f" % best_score_mean)
-
-    X, Y = np.meshgrid(c_list, gamma_list)
-    cs = plt.contour(X, Y, Z)
-    plt.clabel(cs, inline=1)
-    plt.xlabel("c - log2(C)")
-    plt.ylabel("g - log2(gamma)")
-    plt.show()
+        X, Y = np.meshgrid(c_list, gamma_list)
+        cs = plt.contour(X, Y, Z)
+        plt.clabel(cs, inline=True)
+        plt.xlabel("c - log2(C)")
+        plt.ylabel("g - log2(gamma)")
+        plt.show()
 
     return best_C, best_gamma, best_score_mean
 
